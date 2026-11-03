@@ -58,7 +58,13 @@
   .seg button{border:1px solid var(--line);background:#fff;border-radius:10px;padding:12px;font-weight:700;color:var(--text)}
   .seg button.on{background:var(--orange);border-color:var(--orange);color:#fff}
 
-  .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+  .g2 > *{min-width:0}
+  .namerow{display:grid;grid-template-columns:minmax(0,9.5em) minmax(0,1fr);gap:12px}
+  .namerow > *{min-width:0}
+  .namerow .seg button{padding:12px 0}
+  .switch span{min-width:0;overflow-wrap:anywhere}
+  .brand,.datebox{min-width:0}
   .stepper{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
   .stepper button{width:46px;border:none;background:var(--bg);font-size:22px;color:var(--text);flex:none}
   .stepper button:active{background:var(--orange-l)}
@@ -181,14 +187,16 @@
 
     <!-- CENTROS -->
     <div data-panel="centros">
-      <div class="field">
-        <label class="l" for="c_name">Nombre del centro</label>
-        <input id="c_name" class="inp" type="text" autocomplete="off">
-      </div>
-      <div class="field">
-        <label class="l">Tipo</label>
-        <div class="seg" id="c_type">
-          <button data-v="CT" class="on">CT</button><button data-v="PT">PT</button><button data-v="ST">ST</button>
+      <div class="field namerow">
+        <div>
+          <label class="l" for="c_name">Centro</label>
+          <input id="c_name" class="inp" type="text" autocomplete="off" autocapitalize="characters" placeholder="Nº">
+        </div>
+        <div>
+          <label class="l">Tipo</label>
+          <div class="seg" id="c_type">
+            <button data-v="CT" class="on">CT</button><button data-v="PT">PT</button><button data-v="ST">ST</button>
+          </div>
         </div>
       </div>
       <div class="g2 field">
