@@ -1,34 +1,33 @@
-const CACHE_NAME = "prodRPR-cache-v1";
-const FILES_TO_CACHE = [
-  "./ProdRPR_singlefile.html",
-  "./manifest.json",
-  "./icon-192.png",
-  "./icon-512.png"
-];
+// ProdRPR - service worker (funciona sin conexión)
+const CACHE_NAME = 'prodrpr-v2';
+const FILES = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png'];
 
-// Instalar SW y cachear archivos
-self.addEventListener("install", event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(FILES_TO_CACHE))
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
+});
+
+self.addEventListener('activate', e => {
+  e.waitUntil(
+    caches.keys()
+      .then(keys => Promise.all(keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))))
+      .then(() => self.clients.claim())
   );
 });
 
-// Activar SW y limpiar caches viejos
-self.addEventListener("activate", event => {
-  event.waitUntil(
-    caches.keys().then(keyList =>
-      Promise.all(
-        keyList.map(key => {
-          if (key !== CACHE_NAME) return caches.delete(key);
-        })
-      )
-    )
-  );
-});
+self.addEventListener('fetch', e => {
+  const req = e.request;
+  if (req.method !== 'GET' || new URL(req.url).origin !== location.origin) return;
 
-// Interceptar peticiones
-self.addEventListener("fetch", event => {
-  event.respondWith(
-    caches.match(event.request).then(response => response || fetch(event.request))
-  );
+  // Página: primero red (para recibir actualizaciones), si no hay cobertura usa la copia guardada
+  if (req.mode === 'navigate') {
+    e.respondWith(
+      fetch(req)
+        .then(res => { const copy = res.clone(); caches.open(CACHE_NAME).then(c => c.put('./index.html', copy)); return res; })
+        .catch(() => caches.match('./index.html'))
+    );
+    return;
+  }
+
+  // Resto (iconos, manifest): primero caché
+  e.respondWith(caches.match(req).then(r => r || fetch(req)));
 });
