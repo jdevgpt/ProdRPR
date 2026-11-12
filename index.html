@@ -165,6 +165,8 @@ h2,h3,.btn,.tab,.tabs button,.todaybtn{font-family:"Barlow", "Segoe UI", system-
 @media (max-width:400px){.top .jd-tile{display:none}}
 
 </style>
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="ProdRPR">
 </head>
 <body>
 
@@ -632,9 +634,11 @@ h2,h3,.btn,.tab,.tabs button,.todaybtn{font-family:"Barlow", "Segoe UI", system-
   // Volver a "hoy" si la app se queda abierta y cambia el día
   let lastToday=today();
   document.addEventListener('visibilitychange', ()=>{ if(document.visibilityState==='visible'){ const t=today(); if(t!==lastToday){ if(dateEl.value===lastToday) setDate(t); lastToday=t; } } });
-
-  if('serviceWorker' in navigator){ window.addEventListener('load', ()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{})); }
 })();
+</script>
+<script>/* App instalable y sin conexión */
+if('serviceWorker' in navigator && location.protocol.indexOf('http')===0){window.addEventListener('load',function(){navigator.serviceWorker.register('service-worker.js').catch(function(){});});}
+try{if(navigator.storage&&navigator.storage.persist&&(matchMedia('(display-mode: standalone)').matches||navigator.standalone))navigator.storage.persist();}catch(e){}
 </script>
 </body>
 </html>
