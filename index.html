@@ -214,6 +214,7 @@ h2,h3,.btn,.tab,.tabs button,.todaybtn{font-family:"Barlow", "Segoe UI", system-
         <div>
           <label class="l" for="c_name">Centro</label>
           <input id="c_name" class="inp" type="text" autocomplete="off" autocapitalize="characters" placeholder="Nº">
+          <div class="hint" id="c_pista" style="font-weight:600"></div>
         </div>
         <div>
           <label class="l">Tipo</label>
@@ -325,6 +326,7 @@ h2,h3,.btn,.tab,.tabs button,.todaybtn{font-family:"Barlow", "Segoe UI", system-
 <div class="toast" id="toast"></div>
 
 <div class="jdev" aria-hidden="true" style="text-align:right;font-size:11px;letter-spacing:.05em;opacity:.4;padding:14px 16px 8px;user-select:none;-webkit-user-select:none">JDev</div>
+<script src="lineas.js"></script>
 <script>
 (function(){
   'use strict';
@@ -389,6 +391,7 @@ h2,h3,.btn,.tab,.tabs button,.todaybtn{font-family:"Barlow", "Segoe UI", system-
     $('recentLines').innerHTML = lines.slice(0,6).map(l=>`<button class="chip${l===cur?' on':''}" data-line="${esc(l)}">${esc(l)}</button>`).join('');
   }
   $('recentLines').addEventListener('click', e=>{ const b=e.target.closest('[data-line]'); if(!b) return; lineEl.value=b.dataset.line; lineEl.dispatchEvent(new Event('input')); });
+  LineasCD.vincular($('c_name'), lineEl, { pista: $('c_pista'), forzar: true });
   function needLine(){ const l=lineEl.value.trim(); if(!l){ toast('Escribe primero el nombre de línea', true); lineEl.focus(); lineEl.scrollIntoView({behavior:'smooth',block:'center'}); return null; } return l; }
 
   // ---------- Pestañas ----------
@@ -457,7 +460,7 @@ h2,h3,.btn,.tab,.tabs button,.todaybtn{font-family:"Barlow", "Segoe UI", system-
   }
 
   // Centros
-  function resetC(){ $('c_name').value=''; setCType('CT'); $('c_repos').value=0; $('c_punctual').checked=false; $('c_def_text').value=''; cDefs=[]; renderDefs(); if(editing&&editing.section==='centros'){editing=null;} updateEditBar(); }
+  function resetC(){ $('c_name').value=''; $('c_pista').textContent=''; setCType('CT'); $('c_repos').value=0; $('c_punctual').checked=false; $('c_def_text').value=''; cDefs=[]; renderDefs(); if(editing&&editing.section==='centros'){editing=null;} updateEditBar(); }
   $('c_clear').onclick=resetC;
   $('c_save').onclick=()=>{
     if(!needLine()) return;

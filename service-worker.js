@@ -1,6 +1,6 @@
 /* ProdRPR · funcionamiento sin conexión (JDev) */
-const VERSION = 'prodrpr-v1';
-const LOCALES = ["./", "./index.html", "./apple-touch-icon.png", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./icon.svg", "./manifest.json"];
+const VERSION = 'prodrpr-v2';
+const LOCALES = ["./", "./index.html", "./apple-touch-icon.png", "./icon-192.png", "./icon-512.png", "./icon-maskable-512.png", "./icon.svg", "./manifest.json", "./lineas.js", "./lineas.json"];
 const EXTERNOS = ["https://fonts.googleapis.com/css2?family=Barlow:wght@500;600;700&display=swap"];
 
 self.addEventListener('install', e => {
